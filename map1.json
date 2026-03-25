@@ -1,0 +1,71 @@
+﻿{
+    "layers": [
+        [
+            {
+                "params": {
+                    "direction": 90,
+                    "x": 313.0,
+                    "width": 15824,
+                    "y": 409.0,
+                    "height": 3046.8,
+                    "shape": true,
+                    "camera": true,
+                    "wireframe": false,
+                    "isRoad": true,
+                    "line": true,
+                    "textureOffset": 0,
+                    "smoothing": true,
+                    "thick": 128,
+                    "stretchTexture": false,
+                    "repeatTexture": true,
+                    "directed": true,
+                    "vertices": [
+                        {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "x": 197.0,
+                            "y": -7.0
+                        },
+                        {
+                            "x": 479.0,
+                            "y": -94.0
+                        }
+                    ],
+                    "originOffsetRatio": 0,
+                    "physic": true,
+                    "snapToGrid": false,
+                    "straightSides": true,
+                    "cameraOffsetY": 120,
+                    "textureMode": true,
+                    "lineId": 0,
+                    "rotation": 0
+                },
+                "className": "frg.game.editor.objects::GroundPather"
+            }
+        ],
+        [],
+        [],
+        null,
+        [
+            {
+                "params": {
+                    "x": 340,
+                    "width": 64,
+                    "y": 330,
+                    "rotation": 0,
+                    "height": 32
+                },
+                "className": "PlayerWP"
+            }
+        ],
+        []
+    ],
+    "settings": {
+        "gravityY": 500,
+        "countdown": 0,
+        "theme": 1,
+        "prizes": "27,32,38"
+    }
+}
