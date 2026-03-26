@@ -323,7 +323,7 @@ while True:
 
                 if keys[pygame.K_LCTRL] and (event.key == pygame.K_z) and len(landscapeTemp) > 0:
                     landscapeTemp.pop()
-                elif keys[pygame.K_LCTRL] and (event.key == pygame.K_z):
+                elif keys[pygame.K_LCTRL] and (event.key == pygame.K_z) and len(data['undo']) > 0:
                     index = data["undo"].pop()
                     rem = data["layers"][index].pop()
                     objectName = []
