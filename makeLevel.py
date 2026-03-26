@@ -6,14 +6,25 @@ import codecs
 from math import *
 from baseObjects import *
 import makeObject as mo
+import easygui
 
 pygame.init()
 name = "level maker (beta)"
 pygame.display.set_caption(name)
 # os.system("touch customLevel.json")
-baseFile = open("base.json", encoding= "utf-8-sig")
+
+newFile = easygui.boolbox("make new file", "Make a new file?", choices=("Yes", "No"))
+
+if newFile == True :
+    baseFile = "base.json"
+    saveFile = easygui.filesavebox("Choose Save File", "Choose save file", filetypes=["*.json"])
+else:
+    baseFile = easygui.fileopenbox("Choose File", "Choose File", filetypes=["*.json"])
+    saveFile = baseFile
+
 # baseFile = codecs.open("map2.json", encoding= "utf-8-sig")
 # newFile = codecs.open("customLevel.json", encoding= "utf-8-sig", mode = "w")
+baseFile = open(baseFile, encoding="utf-8-sig")
 baseJson = baseFile.read()
 # newFile.write(baseJson)
 
@@ -48,7 +59,7 @@ objectIDHW     = []
 objectID       = []
 objectHWRadius = []
 
-def getObjects(layers):
+def getObjects(layers):  
             for i in layers:
                 # print(i["className"])
                 try:
@@ -114,6 +125,22 @@ moveV = [0,0]
 landscapeTemp = []
 
 def updateLayers():
+    objectName = []
+    objectListHW = []
+    objectHWName = []
+
+    # baseFinish = resetBaseFinish()
+    # baseLandscape = resetBaseLandscape()
+
+    objectList     = []
+    objectListHW   = []
+    objectName     = []
+    objectHWName   = []
+    objectIDHW     = []
+    objectID       = []
+    objectHWRadius = []
+
+
     layers = data["layers"][0]
 
     decLayer = data["layers"][1]
@@ -134,7 +161,7 @@ def updateLayers():
     if mystery != None:
         mysteryLayer = getObjects(mystery)
     # try:
-    #     print("2nd Decoration Successful!")
+    #     print("2nd Decoration Successsful!")
     # except:
         # pass
     if checkpoints != None:
@@ -148,7 +175,7 @@ def updateLayers():
     # objectListHW = OBJ[1]
     # objectName = OBJ[2]
     # objectHWName = OBJ[3]
-
+   
     return OBJ
 
 OBJ = updateLayers()
@@ -175,6 +202,7 @@ while True:
         pygame.draw.lines(SCREEN, (0,255,0), False, landscapeTempG)
 
     for v in objectListHW: # render all rectangles
+        # print(objectListHW)
         rec = pygame.rect.Rect(zoomV*(v[0] + moveV[0]), zoomV*(v[1] + moveV[1]), v[3]*zoomV, v[2]*zoomV)
         rec.center = (zoomV*(v[0] + moveV[0]), zoomV*(v[1] + moveV[1]))
         
@@ -202,7 +230,7 @@ while True:
 
         pygame.draw.lines(SCREEN,color,False, ((rec.center[0]+topR[0],rec.center[1]+topR[1]), (rec.center[0]+topL[0],rec.center[1]+topL[1]), (rec.center[0]+bottomL[0], rec.center[1]+bottomL[1]), (rec.center[0]+bottomR[0],rec.center[1]+bottomR[1]), (rec.center[0]+topR[0],rec.center[1]+topR[1]), (rec.center[0]+bottomL[0], rec.center[1]+bottomL[1])))
         ID = font.render(f'{objectIDHW[objectListHW.index(v)]}',True, (0,255,0))
-        print(rec.center)
+        # print(rec.center)
         SCREEN.blit(ID, (rec.center[0]+bottomL[0],rec.center[1]+bottomL[1]))
 
     for item in objectList:
@@ -216,6 +244,7 @@ while True:
         if len(item) == 0:
             continue
         vOG = item[0]
+        # print(item)
         for v in item:
             SCREEN.blit(vertex, [(v[0] + moveV[0])*zoomV - 1,(v[1] + moveV[1])*zoomV - 1])
             pygame.draw.line(SCREEN,color,[int(zoomV*(vOG[0] + moveV[0])),int((vOG[1]+moveV[1])*zoomV)],[int((v[0] + moveV[0])*zoomV), int((v[1] + moveV[1])*zoomV)])
@@ -230,7 +259,7 @@ while True:
                 json_object = json.dumps(data, indent = 4)
                 # os.system("rm -f map1.json")
                 # os.system("touch map1.json")
-                newFile = codecs.open("map1.json", encoding= "utf-8-sig", mode = "w")
+                newFile = open(saveFile, "w", encoding="utf-8-sig")
                 # newFile.write("")
                 newFile.write(json_object)
                 newFile.close()
@@ -238,8 +267,18 @@ while True:
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:
                 landscapeTemp.append([(pygame.mouse.get_pos()[0]/zoomV-moveV[0]),(pygame.mouse.get_pos()[1]/zoomV-moveV[1])])  # * i dont kmow why its - instead of + but it works T-T
-                print(pygame.mouse.get_pos())
+                # print(pygame.mouse.get_pos())
             if event.type == pygame.KEYDOWN:
+                if len(landscapeTemp) == 0:
+                    if keys[pygame.K_LCTRL] and event.key == pygame.K_s:
+                        json_object = json.dumps(data, indent = 4)
+                        # os.system("rm -f map1.json")
+                        # os.system("touch map1.json")
+                        newFile = codecs.open(saveFile, encoding= "utf-8-sig", mode = "w")
+                        # newFile.write("")
+                        newFile.write(json_object)
+                        newFile.close()
+                        print("FILE SAVED TO:", saveFile)
                 if len(landscapeTemp) == 1:
                     if event.key == pygame.K_n:
                         data = mo.makePivotJoint(landscapeTemp[0], data)
@@ -284,9 +323,60 @@ while True:
 
                 if keys[pygame.K_LCTRL] and (event.key == pygame.K_z) and len(landscapeTemp) > 0:
                     landscapeTemp.pop()
+                elif keys[pygame.K_LCTRL] and (event.key == pygame.K_z):
+                    index = data["undo"].pop()
+                    rem = data["layers"][index].pop()
+                    objectName = []
+                    objectListHW = []
+                    objectHWName = []
+
+                    # baseFinish = resetBaseFinish()
+                    # baseLandscape = resetBaseLandscape()
+
+                    objectList     = []
+                    objectListHW   = []
+                    objectName     = []
+                    objectHWName   = []
+                    objectIDHW     = []
+                    objectID       = []
+                    objectHWRadius = []
+
+
+                    layers = data["layers"][0]
+
+                    decLayer = data["layers"][1]
+                    try:
+                        layer5 = data["layers"][5]
+                    except:
+                        layer5 = None
+                    checkpoints = data["layers"][4]
+                    tnt = data["layers"][2]
+                    mystery = data["layers"][3]
+
+                    if decLayer != None:
+                        decs = getObjects(decLayer)
+                    if layer5 != None:
+                        triggers = getObjects(layer5)
+                    if tnt != None:
+                        tntLayer = getObjects(tnt)
+                    if mystery != None:
+                        mysteryLayer = getObjects(mystery)
+                    # try:
+                    #     print("2nd Decoration Successsful!")
+                    # except:
+                        # pass
+                    if checkpoints != None:
+                        savepoints = getObjects(checkpoints)
+
+                    # try:
+
+
+                    OBJ = getObjects(layers)
+                    # print(data)
+
                 if event.key == pygame.K_EQUALS:
                     zoomV *= 2
-                    print("+")
+                    # print("+")
                 if event.key == pygame.K_MINUS:
                     zoomV /= 2
 

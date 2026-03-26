@@ -30,5 +30,6 @@
         "countdown": 0,
         "theme": 1,
         "prizes": "27,32,38"
-    }
+    },
+    "undo": []
 }

@@ -21,6 +21,7 @@ def makeLandscape(vertices, data):
         v = numpy.subtract(v,origin)
         baseLandscape["params"]["vertices"].append({"x":v[0],"y":v[1]})
     data["layers"][0].append(baseLandscape)
+    data['undo'].append(0)
     print("enter")
     print(data)
     landscapeTemp = []
@@ -36,6 +37,7 @@ def makePipe(vertices, data):
         basePather["params"]["vertices"].append({"x":v[0],"y":v[1]})
         print(basePather)
     data["layers"][0].append(basePather)
+    data['undo'].append(0)
     print("enter")
     print(data)
     return data
@@ -58,6 +60,7 @@ def makeFinish(vertices, data):
     baseFinish["params"]["height"] = h
 
     data["layers"][0].append(baseFinish)
+    data['undo'].append(0)
     return data
 
 def makeRigidBody(vertices, data):
@@ -78,6 +81,7 @@ def makeRigidBody(vertices, data):
         baseBody["params"]["vertices"].append({"x":v[0],"y":v[1]})
         print(baseBody)
     data["layers"][0].append(baseBody)
+    data['undo'].append(0)
     return data
 
 
@@ -88,6 +92,7 @@ def makePivotJoint(vertex, data):
     ID = easygui.integerbox("Enter ID", "ID PROMPT", -1)
     basePivot['params']['id'] = ID
     data['layers'][0].append(basePivot)
+    data['undo'].append(0)
     return data
 
 def makeTrigger(vertices, data):
@@ -109,6 +114,7 @@ def makeTrigger(vertices, data):
     baseTrigger["params"]["height"] = h
     baseTrigger["params"]['id'] = ID
     data["layers"][5].append(baseTrigger)
+    data['undo'].append(5)
     return data
 
 def makeMover(vertices, data):
@@ -127,7 +133,7 @@ def makeMover(vertices, data):
     baseMover['params']['speed'] = speed
     baseMover['params']['startTime'] = waitTime
     data["layers"][5].append(baseMover)
-
+    data['undo'].append(5)
     # print("enter")
     # print(data)
     return data
@@ -141,6 +147,7 @@ def makeMotor(vertex, data):
     baseMotor['params']['id'] = ID
     baseMotor['params']['rate'] = speed
     data['layers'][5].append(baseMotor)
+    data['undo'].append(5)
     return data
 
 def makeTnt(vertex, data):
@@ -149,11 +156,12 @@ def makeTnt(vertex, data):
     baseTnt["params"]['y'] = vertex[1]
     ID = easygui.integerbox("Enter ID", "ID PROMPT")
     radius = easygui.integerbox("Enter radius of explosion:", "Enter Radius", 64,0,None)
-    power = easygui.integerbox("Enter power of explosion:", "Enter Power", 10000,0,None)
-    isPhysics = easygui.boolbox("Make it rigid body?", "make rigid body")
+    power = easygui.integerbox("Enter power of explosion:", "Enter Power", 1500,0,None)
+    isPhysics = easygui.boolbox("Make it affected by physics?", "make physics?", default_choice='[F]alse')
     baseTnt['params']['radius'] = radius
     baseTnt['params']['id'] = ID
     baseTnt['params']['impulse'] = power
     baseTnt['params']['physic'] = isPhysics
     data['layers'][2].append(baseTnt)
+    data['undo'].append(2)
     return data
